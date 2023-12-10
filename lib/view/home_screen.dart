@@ -11,12 +11,12 @@ import 'package:rs_wallpaper/view/page/profile_page.dart';
 import 'package:rs_wallpaper/view/page/random_page.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  final pages = const [
+   HomeScreen({super.key});
+  final pages =  [
     HomePage(),
-    CategoryPage(),
-    RandomPage(),
-    ProfilePage(),
+    const CategoryPage(),
+    const RandomPage(),
+    const ProfilePage(),
   ];
 
   @override

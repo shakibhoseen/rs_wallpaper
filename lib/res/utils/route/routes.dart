@@ -12,7 +12,7 @@ class Routes {
         return MaterialPageRoute(
             builder: (context) =>  BlocProvider(
                   create: (context) => BottomIndexBloc(),
-                  child: const HomeScreen(),
+                  child:  HomeScreen(),
                 ));
       case RoutesName.loginScreen:
         return MaterialPageRoute(

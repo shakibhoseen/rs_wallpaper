@@ -41,6 +41,12 @@ dependencies:
   fluttertoast: ^8.2.4
   another_flushbar: ^1.12.30
   google_nav_bar: ^5.0.6
+  cached_network_image: ^3.3.0
+
+  dio: ^5.4.0
+  retrofit: '>=4.0.0 <5.0.0'
+  logger: any  #for logging purpose
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +58,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  retrofit_generator: '>=7.0.0 <8.0.0'   # required dart >=2.19
+  build_runner: ^2.4.7
+  json_serializable: ^6.6.2
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -85,6 +95,14 @@ flutter:
     - family: BottomNavBarIcons
       fonts:
         - asset: fonts/BottomNavBar.ttf
+
+    - family: Poppins
+      fonts:
+        - asset: fonts/poppin/Poppins-Regular.ttf
+        - asset: fonts/poppins/Poppins-Light.ttf
+          weight: 300
+        - asset: fonts/poppins/Poppins-Bold.ttf
+          weight: 700
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

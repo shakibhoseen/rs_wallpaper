@@ -18,7 +18,7 @@ class MyAppView extends StatelessWidget {
         scaffoldBackgroundColor: MyColors.canvasColor,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(backgroundColor: MyColors.canvasColor),
         useMaterial3: true,
-        //fontFamily: GoogleFonts.inter().fontFamily,
+        fontFamily:  'Poppins',
       ),
        initialRoute: RoutesName.homeScreen,
        onGenerateRoute: Routes.generateRoute,
