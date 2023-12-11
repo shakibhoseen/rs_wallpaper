@@ -132,17 +132,3 @@ Widget imageItem({required Wallpaper wallpaper}) {
   );
 }
 
-int convertToPercentage(double progress) {
-  return (progress * 100).toInt();
-}
-
-
-/*
- if (state is WallpaperFetchInitial) {
-          return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()));
-        } else if (state is ErrorState) {
-          Utils.showToastMessage(state.error);
-          print(state.error);
-        }
- */

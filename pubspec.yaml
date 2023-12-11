@@ -96,6 +96,10 @@ flutter:
       fonts:
         - asset: fonts/BottomNavBar.ttf
 
+    - family: DrawerIcons
+      fonts:
+         - asset: fonts/DrawerIcons.ttf
+
     - family: Poppins
       fonts:
         - asset: fonts/poppins/Poppins-Regular.ttf

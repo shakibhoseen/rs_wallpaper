@@ -27,16 +27,20 @@ class HomeScreen extends StatelessWidget {
     const ProfilePage(),
   ];
 
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _key,
+        drawer: drawerItems(),
         appBar: AppBar(
           leading: Center(
 
             child: InkWell(
               radius: 10,
-              onTap: () {  },
+              onTap: () {   _key.currentState?.openDrawer();},
               child: Ink(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
@@ -52,7 +56,7 @@ class HomeScreen extends StatelessWidget {
           actions: [
             IconButton(onPressed: (){
 
-            }, icon: Icon(Icons.search)),
+            }, icon: const Icon(Icons.search)),
           ],
         ),
         bottomNavigationBar: Container(
@@ -101,4 +105,69 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+Drawer drawerItems(){
+
+  return Drawer(
+    backgroundColor: MyColors.drawerBackColor,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView(
+        children: [
+          SizedBox(height: 18,),
+          Row(
+            children: [
+              Container(
+                height: 50,
+                clipBehavior: Clip.antiAlias,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle
+                ),
+                child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRvlGaf4hpR1g9cTTFirG2kl862LqD0Q2j2vff3Np6lgKt0kw9t1_SQgMblJ_a1IH4xQQ&usqp=CAU', fit: BoxFit.cover,),
+              ),
+              const SizedBox(width: 6,),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Md. Rakibul Islam', style: TextStyle(color: Colors.white, fontSize: 16,fontWeight:  FontWeight.w600),),
+                  Text('Rakib23', style: TextStyle(color: Colors.white, ),),
+                ],
+              )
+            ],
+          ),
+          itemDesign(icon: DrawerIcons.wallpaperIcon, title: 'Wallpaper'),
+          Row(
+            children: [
+              itemDesign(icon: DrawerIcons.autoIcon, title: 'Auto Change'),
+              Switch(value: false, onChanged: (value){
+
+              })
+            ],
+          ),
+          itemDesign(icon: DrawerIcons.shareIcon, title: 'Share'),
+          itemDesign(icon: DrawerIcons.starIcon, title: 'Rate us'),
+          SizedBox(height: 40),
+          itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'),
+          itemDesign(icon: DrawerIcons.aboutUs, title: 'About us'),
+          itemDesign(icon: Icons.copyright, title: 'Copyright'),
+          SizedBox(height: 40),
+          itemDesign(icon: DrawerIcons.exitToApp, title: 'Exit'),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget itemDesign({required IconData icon, required String title}){
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Row(
+      children: [
+        Icon(icon),
+        const SizedBox(width: 8,),
+        Text(title, style: const TextStyle(color: Colors.white),)
+      ],
+    ),
+  );
 }
