@@ -1,0 +1,6 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # Add any additional options here if needed
