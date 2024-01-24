@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:rs_wallpaper/service/service_set_wallpaper.dart';
+//import 'package:workmanager/workmanager.dart';
 
 import 'app.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Workmanager().initialize(
+  //   callbackDispatcher,
+  // );
+  // await Workmanager().registerPeriodicTask(
+  //   "daily_wallpaper_task",
+  //   "task_tag",
+  //   initialDelay: const Duration(seconds: 5), // Adjust for testing
+  //   frequency: const Duration(days: 1),
+  // );
   runApp(const MyApp());
 }
 
+
+// void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) async {
+//     ServiceSetWallPaper wallPaper = ServiceSetWallPaper();
+//     await wallPaper.setWallpaper('https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-nature-mountain-scenery-with-flowers-free-photo.jpg?w=600&quality=80');
+//     return Future.value(true);
+//   });
+// }

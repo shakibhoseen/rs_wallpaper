@@ -23,9 +23,9 @@ class Wallpaper {
   int id;
   String title;
   String image;
-  String description;
+  //String description;
   String tags;
-  int like;
+  //int like;
 
   @JsonKey(name: 'view_count')
   int viewCount;
@@ -35,24 +35,24 @@ class Wallpaper {
 
   @JsonKey(name: 'user_id')
   int userId;
-  Uploader uploader;
+  //Uploader uploader;
   List<Category> categories;
-  bool likes;
+  //bool likes;
 
   Wallpaper({
     required this.id,
     required this.title,
     required this.image,
-    required this.description,
+    //required this.description,
     required this.tags,
-    required this.like,
+    //required this.like,
     required this.viewCount,
     required this.download,
     required this.copyrightReport,
     required this.userId,
-    required this.uploader,
+    //required this.uploader,
     required this.categories,
-    required this.likes,
+    //required this.likes,
   });
   factory Wallpaper.fromJson(Map<String, dynamic> json) => _$WallpaperFromJson(json);
   Map<String, dynamic> toJson() => _$WallpaperToJson(this);

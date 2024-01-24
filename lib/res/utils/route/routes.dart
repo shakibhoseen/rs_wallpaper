@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:rs_wallpaper/res/data/retrofit/model/all_wallpaper.dart';
+import 'package:rs_wallpaper/view/screen/display_wallpaper_screen.dart';
 
 import '../../../bloc/bottom_nav/bottom_index_bloc.dart';
 import '../../../view/view.dart';
@@ -11,9 +12,9 @@ class Routes {
     switch (settings.name) {
       case RoutesName.homeScreen:
         return MaterialPageRoute(
-            builder: (context) =>  BlocProvider(
+            builder: (context) => BlocProvider(
                   create: (context) => BottomIndexBloc(),
-                  child:  HomeScreen(),
+                  child: HomeScreen(),
                 ));
       case RoutesName.loginScreen:
         return MaterialPageRoute(
@@ -27,6 +28,11 @@ class Routes {
       case RoutesName.introScreen:
         return MaterialPageRoute(
           builder: (context) => const IntroScreen(),
+        );
+      case RoutesName.displayWallPaperScreen:
+        final wallpaper = settings.arguments as Wallpaper;
+        return MaterialPageRoute(
+          builder: (context) =>  DisplayWallpaperScreen(wallpaper: wallpaper),
         );
       default:
         return MaterialPageRoute(builder: (context) {

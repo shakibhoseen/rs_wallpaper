@@ -5,6 +5,7 @@ class MyColors {
   static const canvasColor = Colors.black;
   static const inactiveTextColor = Color(0xff55596A);
   static const activeTextColor = Color(0xffC6C8D8);
+  static const borderButtonColor = Color(0x8cC6C8D8);
   static const tabGradient = LinearGradient(
     colors: [Color(0xff454A5E), Color(0xff140F36)],
     begin: Alignment.centerLeft,

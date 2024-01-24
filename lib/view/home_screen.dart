@@ -112,9 +112,10 @@ Drawer drawerItems(){
     backgroundColor: MyColors.drawerBackColor,
     child: Padding(
       padding: const EdgeInsets.all(16.0),
-      child: ListView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          SizedBox(height: 18,),
+          const SizedBox(height: 18,),
           Row(
             children: [
               Container(
@@ -125,7 +126,7 @@ Drawer drawerItems(){
                 ),
                 child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRvlGaf4hpR1g9cTTFirG2kl862LqD0Q2j2vff3Np6lgKt0kw9t1_SQgMblJ_a1IH4xQQ&usqp=CAU', fit: BoxFit.cover,),
               ),
-              const SizedBox(width: 6,),
+              const SizedBox(width: 12,),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -136,6 +137,7 @@ Drawer drawerItems(){
               )
             ],
           ),
+          SizedBox(height: 20,),
           itemDesign(icon: DrawerIcons.wallpaperIcon, title: 'Wallpaper'),
           Row(
             children: [
@@ -147,11 +149,11 @@ Drawer drawerItems(){
           ),
           itemDesign(icon: DrawerIcons.shareIcon, title: 'Share'),
           itemDesign(icon: DrawerIcons.starIcon, title: 'Rate us'),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'),
           itemDesign(icon: DrawerIcons.aboutUs, title: 'About us'),
           itemDesign(icon: Icons.copyright, title: 'Copyright'),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           itemDesign(icon: DrawerIcons.exitToApp, title: 'Exit'),
         ],
       ),
@@ -165,7 +167,7 @@ Widget itemDesign({required IconData icon, required String title}){
     child: Row(
       children: [
         Icon(icon),
-        const SizedBox(width: 8,),
+        const SizedBox(width: 14,),
         Text(title, style: const TextStyle(color: Colors.white),)
       ],
     ),
