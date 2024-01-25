@@ -5,6 +5,7 @@ import 'package:rs_wallpaper/res/colors.dart';
 import 'package:rs_wallpaper/res/component/back_button_widget.dart';
 import 'package:rs_wallpaper/res/component/image_cache.dart';
 import 'package:rs_wallpaper/res/data/retrofit/model/all_wallpaper.dart';
+import 'package:rs_wallpaper/res/utils/asset/asset_name.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
 import 'package:rs_wallpaper/res/utils/utils.dart';
 import 'package:rs_wallpaper/service/service_set_wallpaper.dart';
@@ -63,6 +64,7 @@ class DisplayWallpaperScreen extends StatelessWidget {
                   IconButton(icon: const Icon(DisplayImageIcons.download, color: Colors.white,), onPressed: () {  },),
                   IconButton(icon: const Icon(DisplayImageIcons.home, color: Colors.white,), onPressed: () {
                     setWallpaper(wallpaper.image, ScreenType.homeScreen, context);
+
                   },),
 
                   IconButton(icon: const Icon(DisplayImageIcons.lock, color: Colors.white,), onPressed: () {
@@ -81,9 +83,26 @@ class DisplayWallpaperScreen extends StatelessWidget {
 
 void setWallpaper(String url, ScreenType screenType, BuildContext context) async{
   ServiceSetWallPaper wallpaper = ServiceSetWallPaper();
+  showDialog(context: context, builder: (context) {
+    return AlertDialog(
+        backgroundColor: Colors.green.withOpacity(0.14),
+        clipBehavior: Clip.antiAlias,
+
+        content: BackdropFilter(filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25, tileMode: TileMode.mirror),
+          child:  Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(AssetName.loadingGif, width: 50, height: 50,  ),
+              const SizedBox(height: 15,),
+              const Text('Processing...',style: TextStyle(color: Colors.red),)
+            ],
+          ),
+        )
+    );
+  },);
   final value = await wallpaper.setWallpaper(url, screenType);
   final message = screenType== ScreenType.homeScreen ? 'Successfully Changed the home screen Wallpaper': 'Successfully Changed the Lock screen Wallpaper';
-  Utils.showToastMessage('hey $value');
+  Navigator.pop(context);
   if(value){
     Utils.showFlashBarMessage(message, FlashType.success, context);
 
@@ -108,7 +127,7 @@ class ContainerWithBlur extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-        color: Colors.green.withOpacity(0.3), // Set the background color with opacity
+        color: Colors.indigo.withOpacity(0.3), // Set the background color with opacity
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 35.0, sigmaY: 35.0),

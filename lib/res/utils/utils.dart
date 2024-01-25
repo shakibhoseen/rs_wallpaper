@@ -36,7 +36,7 @@ class Utils {
             color: Colors.white,
           ),
           message: message,
-          backgroundColor: type == FlashType.success ? const Color(0x22ffffff) : Colors.red,
+          backgroundColor: type == FlashType.success ?  const Color(0x22ffffff) : Colors.red,  //
           titleColor: Colors.white,
           messageColor: Colors.white,
           duration: const Duration(seconds: 3),
