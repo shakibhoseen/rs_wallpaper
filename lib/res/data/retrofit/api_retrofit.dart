@@ -2,6 +2,8 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
+
+import 'model/all_categories.dart';
 import 'model/all_wallpaper.dart';
 
 part "api_retrofit.g.dart";
@@ -11,7 +13,7 @@ part "api_retrofit.g.dart";
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
- 
+
 
   @GET("wallpaper/all")
   Future<AllWallpaper> allWallpaper(@Query("page") int page);
@@ -47,7 +49,15 @@ abstract class ApiService {
     @Query("page") int page,
   );
 
-   
+   @GET("category/all")
+   Future<AllCategories> allCategory();
+
+  @GET("wallpaper/category")
+  Future<AllWallpaper> categoryWallpaper(
+      @Query("category_id") String id,
+      @Query("user_id") String userId
+      );
+
 
     // Handle the response and potential errors
   static handleResponse<T>(Response<T> response) {

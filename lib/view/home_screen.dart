@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:rs_wallpaper/bloc/all_categories/all_categories_fetch_bloc.dart';
 
 import 'package:rs_wallpaper/bloc/wallpaper/wallpaper_fetch_bloc.dart';
 import 'package:rs_wallpaper/res/colors.dart';
@@ -22,7 +23,11 @@ class HomeScreen extends StatelessWidget {
       create: (context) => WallpaperFetchBloc(),
       child: const HomePage(),
     ),
-    const CategoryPage(),
+    BlocProvider(
+      create: (context) => AllCategoriesFetchBloc(),
+      child: const CategoryPage(),
+    ),
+    
     const RandomPage(),
     const ProfilePage(),
   ];

@@ -23,34 +23,26 @@ Wallpaper _$WallpaperFromJson(Map<String, dynamic> json) => Wallpaper(
       id: json['id'] as int,
       title: json['title'] as String,
       image: json['image'] as String,
-      //description: json['description'] as String,
       tags: json['tags'] as String,
-      //like: json['like'] as int,
       viewCount: json['view_count'] as int,
       download: json['download'] as int,
       copyrightReport: json['copyright_report'] as int,
       userId: json['user_id'] as int,
-      //uploader: Uploader.fromJson(json['uploader'] as Map<String, dynamic>),
       categories: (json['categories'] as List<dynamic>)
           .map((e) => Category.fromJson(e as Map<String, dynamic>))
           .toList(),
-     // likes: json['likes'] as bool,
     );
 
 Map<String, dynamic> _$WallpaperToJson(Wallpaper instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'image': instance.image,
-      //'description': instance.description,
       'tags': instance.tags,
-      //'like': instance.like,
       'view_count': instance.viewCount,
       'download': instance.download,
       'copyright_report': instance.copyrightReport,
       'user_id': instance.userId,
-      //'uploader': instance.uploader,
       'categories': instance.categories,
-      //'likes': instance.likes,
     };
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
