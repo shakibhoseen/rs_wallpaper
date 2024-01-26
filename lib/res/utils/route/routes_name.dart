@@ -4,4 +4,5 @@ class RoutesName{
   static const String splashScreen = "splash_screen";
   static const String introScreen = "intro_screen";
   static const String displayWallPaperScreen = "display_wallpaper_screen";
+  static const String showWallPaperByCategoryScreen = "category_by_wallpaper_screen";
 }

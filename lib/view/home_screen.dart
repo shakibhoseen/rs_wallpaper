@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:rs_wallpaper/bloc/all_categories/all_categories_fetch_bloc.dart';
 
-import 'package:rs_wallpaper/bloc/wallpaper/wallpaper_fetch_bloc.dart';
 import 'package:rs_wallpaper/res/colors.dart';
 import 'package:rs_wallpaper/res/my_shadow.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
@@ -13,6 +12,7 @@ import 'package:rs_wallpaper/view/page/profile_page.dart';
 import 'package:rs_wallpaper/view/page/random_page.dart';
 
 import '../bloc/bottom_nav/bottom_index_bloc.dart';
+import '../bloc/wallpaper/common_event_state.dart';
 
 const nameList = ['Home', 'Category' , 'Random', 'Profile'];
 

@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rs_wallpaper/bloc/wallpaper/wallpaper_fetch_bloc.dart';
+
 import 'package:rs_wallpaper/res/component/image_item.dart';
 import 'package:rs_wallpaper/res/data/retrofit/model/all_wallpaper.dart';
 import 'package:rs_wallpaper/res/utils/route/routes_name.dart';
 import 'package:rs_wallpaper/res/utils/utils.dart';
+
+import '../../bloc/wallpaper/common_event_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

@@ -32,7 +32,7 @@ class DisplayWallpaperScreen extends StatelessWidget {
                        padding: EdgeInsets.symmetric(horizontal: 2),
                        child: Icon(DisplayImageIcons.backArrow, size: 15,),
                      ), onPress: (){
-                      Utils.showFlashBarMessage('Success', FlashType.success, context);
+                      Navigator.pop(context);
                     },),
                     Expanded(
                       child: Padding(

@@ -1,4 +1,4 @@
-part of 'wallpaper_fetch_bloc.dart';
+part of 'common_event_state.dart';
 
 @immutable
 sealed class WallpaperFetchState {}
