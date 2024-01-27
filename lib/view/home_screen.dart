@@ -4,8 +4,11 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:rs_wallpaper/bloc/all_categories/all_categories_fetch_bloc.dart';
 
 import 'package:rs_wallpaper/res/colors.dart';
+import 'package:rs_wallpaper/res/data/shared_pref/setting_datta.dart';
 import 'package:rs_wallpaper/res/my_shadow.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
+import 'package:rs_wallpaper/res/utils/utils.dart';
+
 import 'package:rs_wallpaper/view/page/category_page.dart';
 import 'package:rs_wallpaper/view/page/home_page.dart';
 import 'package:rs_wallpaper/view/page/profile_page.dart';
@@ -13,6 +16,7 @@ import 'package:rs_wallpaper/view/page/random_page.dart';
 
 import '../bloc/bottom_nav/bottom_index_bloc.dart';
 import '../bloc/wallpaper/common_event_state.dart';
+import '../service/background_task.dart';
 
 const nameList = ['Home', 'Category' , 'Random', 'Profile'];
 
@@ -31,11 +35,34 @@ class HomeScreen extends StatelessWidget {
     const RandomPage(),
     const ProfilePage(),
   ];
-
+  final backgroundTask = BackgroundTask();
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
+  final switchListener = ValueNotifier<bool>(false);
+  final settingData = SettingData();
+  void getSwitchValue() async{
+    final value = await settingData.getSwitchValue();
+    if(value){
+      switchListener.value = true;
+    }else{
+      switchListener.value = false;
+    }
+  }
+
+  void setSwitchValue(bool activate) async{
+    Utils.showToastMessage('set switch $activate');
+    await settingData.setSwitchValue(activate: activate);
+    if(activate){
+      backgroundTask.register();
+    }else{
+      backgroundTask.unregisterBackgroundTask();
+    }
+    getSwitchValue();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    getSwitchValue();
     return SafeArea(
       child: Scaffold(
         key: _key,
@@ -110,61 +137,68 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
-Drawer drawerItems(){
 
-  return Drawer(
-    backgroundColor: MyColors.drawerBackColor,
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          const SizedBox(height: 18,),
-          Row(
-            children: [
-              Container(
-                height: 50,
-                clipBehavior: Clip.antiAlias,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle
+  Drawer drawerItems(){
+
+    return Drawer(
+      backgroundColor: MyColors.drawerBackColor,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const SizedBox(height: 18,),
+            Row(
+              children: [
+                Container(
+                  height: 50,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle
+                  ),
+                  child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRvlGaf4hpR1g9cTTFirG2kl862LqD0Q2j2vff3Np6lgKt0kw9t1_SQgMblJ_a1IH4xQQ&usqp=CAU', fit: BoxFit.cover,),
                 ),
-                child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRvlGaf4hpR1g9cTTFirG2kl862LqD0Q2j2vff3Np6lgKt0kw9t1_SQgMblJ_a1IH4xQQ&usqp=CAU', fit: BoxFit.cover,),
-              ),
-              const SizedBox(width: 12,),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Md. Rakibul Islam', style: TextStyle(color: Colors.white, fontSize: 16,fontWeight:  FontWeight.w600),),
-                  Text('Rakib23', style: TextStyle(color: Colors.white, ),),
-                ],
-              )
-            ],
-          ),
-          SizedBox(height: 20,),
-          itemDesign(icon: DrawerIcons.wallpaperIcon, title: 'Wallpaper'),
-          Row(
-            children: [
-              itemDesign(icon: DrawerIcons.autoIcon, title: 'Auto Change'),
-              Switch(value: false, onChanged: (value){
+                const SizedBox(width: 12,),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Md. Rakibul Islam', style: TextStyle(color: Colors.white, fontSize: 16,fontWeight:  FontWeight.w600),),
+                    Text('Rakib23', style: TextStyle(color: Colors.white, ),),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(height: 20,),
+            itemDesign(icon: DrawerIcons.wallpaperIcon, title: 'Wallpaper'),
+            Row(
+              children: [
+                itemDesign(icon: DrawerIcons.autoIcon, title: 'Auto Change'),
+                ValueListenableBuilder(
 
-              })
-            ],
-          ),
-          itemDesign(icon: DrawerIcons.shareIcon, title: 'Share'),
-          itemDesign(icon: DrawerIcons.starIcon, title: 'Rate us'),
-          const SizedBox(height: 40),
-          itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'),
-          itemDesign(icon: DrawerIcons.aboutUs, title: 'About us'),
-          itemDesign(icon: Icons.copyright, title: 'Copyright'),
-          const SizedBox(height: 40),
-          itemDesign(icon: DrawerIcons.exitToApp, title: 'Exit'),
-        ],
+                  builder: (context,value, _ ) {
+                    return Switch(value: value, onChanged: (value){
+                      setSwitchValue(value);
+                    });
+                  }, valueListenable: switchListener,
+                )
+              ],
+            ),
+            itemDesign(icon: DrawerIcons.shareIcon, title: 'Share'),
+            itemDesign(icon: DrawerIcons.starIcon, title: 'Rate us'),
+            const SizedBox(height: 40),
+            itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'),
+            itemDesign(icon: DrawerIcons.aboutUs, title: 'About us'),
+            itemDesign(icon: Icons.copyright, title: 'Copyright'),
+            const SizedBox(height: 40),
+            itemDesign(icon: DrawerIcons.exitToApp, title: 'Exit'),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
+
 
 Widget itemDesign({required IconData icon, required String title}){
   return Padding(

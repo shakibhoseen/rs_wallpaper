@@ -50,7 +50,8 @@ dependencies:
 
   #wallpaper
   flutter_wallpaper_manager: ^0.0.4
-  #workmanager: ^0.5.2
+  workmanager: ^0.5.2
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
