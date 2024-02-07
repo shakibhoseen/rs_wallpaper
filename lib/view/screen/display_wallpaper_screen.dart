@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:rs_wallpaper/res/colors.dart';
 import 'package:rs_wallpaper/res/component/back_button_widget.dart';
 import 'package:rs_wallpaper/res/component/image_cache.dart';
+import 'package:rs_wallpaper/res/data/hive/favorite_item.dart';
+import 'package:rs_wallpaper/res/data/hive/hive_repository.dart';
 import 'package:rs_wallpaper/res/data/retrofit/model/all_wallpaper.dart';
 import 'package:rs_wallpaper/res/utils/asset/asset_name.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
@@ -12,11 +14,16 @@ import 'package:rs_wallpaper/service/service_set_wallpaper.dart';
 
 class DisplayWallpaperScreen extends StatelessWidget {
   final Wallpaper wallpaper;
-  const DisplayWallpaperScreen({super.key, required this.wallpaper});
-
+   DisplayWallpaperScreen({super.key, required this.wallpaper});
+  final heartValue = ValueNotifier<bool>(false);
+  final repo= HiveRepository();
+  void getFavoriteDetails() async{
+    final has =await repo.hasParticularItem(wallpaper.id);
+    heartValue.value = has;
+}
   @override
   Widget build(BuildContext context) {
-    final heartValue = ValueNotifier<bool>(false);
+   getFavoriteDetails();
     return Scaffold(
       body: Stack(
         children: [
@@ -49,7 +56,18 @@ class DisplayWallpaperScreen extends StatelessWidget {
                     ValueListenableBuilder(valueListenable: heartValue,
 
                       builder: (context,value, _) {
-                        return IconButton(onPressed: (){ heartValue.value = !value; }, icon: value? const Icon(DisplayImageIcons.love, color: Colors.pink,) :const Icon(DisplayImageIcons.loveUnFill, color: MyColors.activeTextColor,) );
+                        return IconButton(onPressed: () async{
+                          heartValue.value = !value;
+
+                          if(!value){ // add favorite
+                            await repo.addFavoriteItem(FavoriteItem(wallpaper.id, wallpaper.title, wallpaper.image, wallpaper.categories[0].id, wallpaper.categories[0].name));
+                            Utils.showToastMessage('add');
+                          }else{ //remove
+                            await repo.deleteFavoriteItem(wallpaper.id);
+                            Utils.showToastMessage('remove');
+                          }
+
+                          }, icon: value? const Icon(DisplayImageIcons.love, color: Colors.pink,) :const Icon(DisplayImageIcons.loveUnFill, color: MyColors.activeTextColor,) );
                       }
                     ),
                   ],),
