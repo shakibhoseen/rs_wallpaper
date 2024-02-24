@@ -10,24 +10,51 @@ import 'package:rs_wallpaper/res/data/retrofit/model/all_wallpaper.dart';
 import 'package:rs_wallpaper/res/utils/asset/asset_name.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
 import 'package:rs_wallpaper/res/utils/utils.dart';
+import 'package:rs_wallpaper/service/flutter_downloader.dart';
 import 'package:rs_wallpaper/service/service_set_wallpaper.dart';
 
-class DisplayWallpaperScreen extends StatelessWidget {
+import '../../service/service_locator.dart';
+
+class DisplayWallpaperScreen extends StatefulWidget {
   final Wallpaper wallpaper;
    DisplayWallpaperScreen({super.key, required this.wallpaper});
-  final heartValue = ValueNotifier<bool>(false);
-  final repo= HiveRepository();
-  void getFavoriteDetails() async{
-    final has =await repo.hasParticularItem(wallpaper.id);
-    heartValue.value = has;
+
+  @override
+  State<DisplayWallpaperScreen> createState() => _DisplayWallpaperScreenState();
 }
+
+class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
+  final heartValue = ValueNotifier<bool>(false);
+
+  final repo= getIt<HiveRepository>();
+  final fileDownloader = FileDownloader();
+
+  void getFavoriteDetails() async{
+    final has =await repo.favorite.hasParticularItem(widget.wallpaper.id);
+    heartValue.value = has;
+    final recentHas = await repo.recentView.hasParticularItem(widget.wallpaper.id);
+    if(recentHas){
+      await repo.recentView.deleteFavoriteItem(widget.wallpaper.id);
+    }
+    await repo.recentView.addRecentItem(FavoriteItem(widget.wallpaper.id, widget.wallpaper.title, widget.wallpaper.image, widget.wallpaper.categories[0].id, widget.wallpaper.categories[0].name));
+
+  }
+
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
    getFavoriteDetails();
     return Scaffold(
       body: Stack(
         children: [
-          CustomImageCatch(wallpaper: wallpaper),
+          CustomImageCatch(wallpaper: widget.wallpaper),
           SafeArea(child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -47,8 +74,8 @@ class DisplayWallpaperScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(wallpaper.title, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),),
-                            Text(wallpaper.categories.isNotEmpty? "${wallpaper.categories[0].displayName}":'category', style: const TextStyle(fontWeight: FontWeight.w300, color: Colors.white)),
+                            Text(widget.wallpaper.title, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),),
+                            Text(widget.wallpaper.categories.isNotEmpty? "${widget.wallpaper.categories[0].displayName}":'category', style: const TextStyle(fontWeight: FontWeight.w300, color: Colors.white)),
                           ],
                         ),
                       ),
@@ -60,10 +87,10 @@ class DisplayWallpaperScreen extends StatelessWidget {
                           heartValue.value = !value;
 
                           if(!value){ // add favorite
-                            await repo.addFavoriteItem(FavoriteItem(wallpaper.id, wallpaper.title, wallpaper.image, wallpaper.categories[0].id, wallpaper.categories[0].name));
+                            await repo.favorite.addFavoriteItem(FavoriteItem(widget.wallpaper.id, widget.wallpaper.title, widget.wallpaper.image, widget.wallpaper.categories[0].id, widget.wallpaper.categories[0].name));
                             Utils.showToastMessage('add');
                           }else{ //remove
-                            await repo.deleteFavoriteItem(wallpaper.id);
+                            await repo.favorite.deleteFavoriteItem(widget.wallpaper.id);
                             Utils.showToastMessage('remove');
                           }
 
@@ -78,15 +105,31 @@ class DisplayWallpaperScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                   IconButton(icon: const Icon(Icons.report_gmailerrorred, color: Colors.white,), onPressed: () {  },),
-                  IconButton(icon: const Icon(DisplayImageIcons.sharing, color: Colors.white,), onPressed: () {  },),
-                  IconButton(icon: const Icon(DisplayImageIcons.download, color: Colors.white,), onPressed: () {  },),
+                  IconButton(icon: const Icon(DisplayImageIcons.sharing, color: Colors.white,), onPressed: () {
+                    print(widget.wallpaper.image);
+                    DownloadManager.startDownload(widget.wallpaper.image, 'namegy');
+                  },),
+                  // StreamBuilder<int>(
+                  //   stream: fileDownloader.progressStream,
+                  //   builder: (context, snapshot) {
+                  //     print(".........data ...${snapshot.data}");
+                  //     if(snapshot.hasData) {
+                  //       return Text('${snapshot.data}');
+                  //     }
+                  //     return IconButton(icon: const Icon(DisplayImageIcons.download, color: Colors.white,), onPressed: () async{
+                  //       final p = await fileDownloader.downloadFile(widget.wallpaper.image, 'name.jpg');
+                  //       Utils.showToastMessage('${p.message}');
+                  //       print(p.message);
+                  //     },);
+                  //   }
+                  // ),
                   IconButton(icon: const Icon(DisplayImageIcons.home, color: Colors.white,), onPressed: () {
-                    setWallpaper(wallpaper.image, ScreenType.homeScreen, context);
+                    setWallpaper(widget.wallpaper.image, ScreenType.homeScreen, context);
 
                   },),
 
                   IconButton(icon: const Icon(DisplayImageIcons.lock, color: Colors.white,), onPressed: () {
-                    setWallpaper(wallpaper.image, ScreenType.lockScreen, context);
+                    setWallpaper(widget.wallpaper.image, ScreenType.lockScreen, context);
                   },),
 
                 ],),
@@ -144,7 +187,7 @@ class ContainerWithBlur extends StatelessWidget {
       //margin: const EdgeInsets.all(16.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
         color: Colors.indigo.withOpacity(0.3), // Set the background color with opacity
       ),
       child: BackdropFilter(

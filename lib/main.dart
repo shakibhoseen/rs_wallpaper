@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:rs_wallpaper/res/data/hive/hive_repository.dart';
 import 'package:rs_wallpaper/service/background_task.dart';
+import 'package:rs_wallpaper/service/service_locator.dart';
 import 'package:rs_wallpaper/service/service_set_wallpaper.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -32,7 +33,7 @@ void main() async{
   //   callbackDispatcher,
   // );
   await BackgroundTask().initialize();
-  await HiveRepository.initialize();
+  await setupServiceLocator();
   // await Workmanager().registerPeriodicTask(
   //   "daily_wallpaper_task",
   //   "task_tag",
