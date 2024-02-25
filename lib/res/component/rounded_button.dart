@@ -57,7 +57,7 @@ class _RoundedButtonState extends State<RoundedButton> {
                   width: 1,
                 )
               ),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -68,7 +68,7 @@ class _RoundedButtonState extends State<RoundedButton> {
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.w700),
                     ),
-                    SizedBox(
+                    if (widget.isLoading)SizedBox(
                       width: 8,
                     ),
                     if (widget.isLoading)

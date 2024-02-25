@@ -12,15 +12,29 @@ import 'package:workmanager/workmanager.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData)async {
     // Your periodic task logic goes here
+    bool? home = bool.tryParse(inputData?['home']);
+    bool? lock = bool.tryParse(inputData?['lock']);
 
     // You can call your function here
-    await yourFunction();
+    await yourFunction(home, lock);
 
     return Future.value(true);
   });
 }
 
-Future<void> yourFunction() async{
+Future<void> yourFunction(bool? home, bool? lock) async{
+  bool homeValue = home??false;
+  bool lockValue = lock??false;
+
+  ScreenType v = ScreenType.homeScreen;
+
+  if(homeValue && lockValue){
+    v= ScreenType.bothScreen;
+  }else if(lockValue){
+    v = ScreenType.lockScreen;
+  }
+
+
   // Your function logic goes here
   final random = Random();
   int page = random.nextInt(17);
@@ -29,7 +43,7 @@ Future<void> yourFunction() async{
     final list = allWallpaper.data;
     if(list.isNotEmpty){
       int index = random.nextInt(list.length);
-      await setWallpaper(list[index].image, ScreenType.homeScreen );
+      await setWallpaper(list[index].image, v );
     }
   }catch(e){//
   }
@@ -51,12 +65,17 @@ class BackgroundTask {
     );
   }
 
-  void register() {
+  void register({required Duration duration,required bool home,required bool lock}) {
+    final Map<String, dynamic> inputData = {
+      'home': home,
+      'lock': lock,
+    };
     Workmanager().registerPeriodicTask(
       "1",
       "backgroundTask",
-      initialDelay: const Duration(minutes: 15),
-      frequency: const Duration(minutes: 15), // Adjust the frequency as needed
+      initialDelay: duration,
+      frequency: duration, // Adjust the frequency as needed
+      inputData: inputData,
     );
   }
 

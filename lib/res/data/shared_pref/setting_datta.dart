@@ -2,16 +2,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingData{
   static const String _switchKey = 'switchKey';
-
+  static const String _duration  = 'duration';
+  static const String _screen  = 'screenType';
   // Save most played song limit
-  Future<void> setSwitchValue({required bool activate}) async {
+  Future<void> setSwitchValue({required bool activate, required String timeFormat, required String screenType}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_switchKey, activate);
+    await prefs.setString(_duration, timeFormat);
+    await prefs.setString(_screen, screenType);
+  }
+  Future<void> setSwitchOnly({required bool activate, }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_switchKey, activate);
   }
 
   // Get most played song limit
-  Future<bool> getSwitchValue() async {
+  Future<(bool, String, String)> getSwitchValue() async {  // switch, time, screen
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_switchKey)??false ;
+
+    return (prefs.getBool(_switchKey)??false, prefs.getString(_duration)??'24h', prefs.getString(_screen)??'home') ;
   }
 }
+

@@ -106,4 +106,34 @@ class DownloadManager {
   }
 }
 
+String getFileExtensionFromUrl(String url) {
+  // Split the URL using the dot as a delimiter
+  List<String> parts = url.split('.');
+
+  // Take the last part of the URL after the last dot
+  String lastPart = parts.last;
+
+  // If there is a query parameter in the URL, remove it
+  List<String> queryParts = lastPart.split('?');
+  String extentionname = queryParts.first;
+  int len = parts.length;
+  String namePart = parts[len>2? len-2: 0];
+
+
+  // Split the last part using slash as a delimiter (in case the URL ends with a slash)
+  List<String> fileNameParts = namePart.split('/');
+
+  // Take the last part of the split to get the file name with extension
+  String fileNameWithExtension = fileNameParts.last;
+
+  // Split the file name using dot as a delimiter
+  //List<String> fileParts = fileNameWithExtension.split('.');
+  print('filename with ---$fileNameWithExtension');
+  // Take the last part as the file extension
+  //String fileExtension = fileParts.last;
+  print('extention ---$extentionname');
+  return extentionname;
+}
+
+
 

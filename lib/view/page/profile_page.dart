@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final listBool = [false, false, false];
   final indexValue = ValueNotifier<int>(0);
   final repo = getIt<HiveRepository>();
-  ValueListenable<Box<FavoriteItem>>? listenable, favoriteListenable, recentListenable;
+  ValueListenable<Box<FavoriteItem>>? listenable, favoriteListenable, recentListenable, downLoadListenable;
 
   @override
   void initState() {
@@ -47,7 +47,11 @@ class _ProfilePageState extends State<ProfilePage> {
         }
         listenable = recentListenable;
       case 'Downloaded':
-      //listenable = await repo.recentView.getListenable();
+        if(!listBool[1]){
+          downLoadListenable = await repo.download.getListenable();
+          listBool[1] = true;
+        }
+       listenable = downLoadListenable;
       case 'Liked':
       if(!listBool[2]){
         favoriteListenable = await repo.favorite.getListenable();
@@ -63,6 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
     if(listBool[0]){
       repo.recentView.closeRecentSongsBox();
       listBool[0]=false;
+    }
+    if(listBool[1]){
+      repo.download.closeDownloadItemBox();
+      listBool[1]=false;
     }
     if(listBool[2]){
       repo.favorite.closeFavoriteBox();
