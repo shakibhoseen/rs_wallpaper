@@ -63,7 +63,7 @@ class HomeScreen extends StatelessWidget {
   void setSwitchValue(bool activate, ) async {
     await settingData.setSwitchValue(activate: activate, timeFormat: timeShortType, screenType: home&&lock ?'both': lock?'lock':'home');
     if (activate) {
-      backgroundTask.register(duration: OperationFormat.getValueGenerate(timeShortType).$1, home: home, lock: lock);
+      backgroundTask.register(duration: OperationFormat.getValueGenerate(timeShortType).$1,);
     } else {
       backgroundTask.unregisterBackgroundTask();
     }
@@ -237,7 +237,7 @@ class HomeScreen extends StatelessWidget {
                             (p0) => popUpDesign(
                               () {
                                 setSwitchValue(value);
-
+                                   Navigator.pop(p0);
                               },
                             ),
                           );

@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:rs_wallpaper/res/data/retrofit/api_retrofit.dart';
+import 'package:rs_wallpaper/res/data/shared_pref/setting_datta.dart';
+import 'package:rs_wallpaper/res/utils/operation_format.dart';
 import 'package:rs_wallpaper/service/service_set_wallpaper.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -12,20 +14,21 @@ import 'package:workmanager/workmanager.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData)async {
     // Your periodic task logic goes here
-    bool? home = bool.tryParse(inputData?['home']);
-    bool? lock = bool.tryParse(inputData?['lock']);
 
     // You can call your function here
-    await yourFunction(home, lock);
+    await yourFunction();
 
     return Future.value(true);
   });
 }
 
-Future<void> yourFunction(bool? home, bool? lock) async{
-  bool homeValue = home??false;
-  bool lockValue = lock??false;
-
+Future<void> yourFunction() async{
+  final value = await SettingData().getSwitchValue();
+  final  scren = value.$3;
+  final itemHomeLock = OperationFormat.getBooleanFromScreenFormat(screenType: scren);
+  bool homeValue = itemHomeLock.$1;
+  bool lockValue = itemHomeLock.$2;
+  print('home- $homeValue , lock- $lockValue');
   ScreenType v = ScreenType.homeScreen;
 
   if(homeValue && lockValue){
@@ -65,17 +68,13 @@ class BackgroundTask {
     );
   }
 
-  void register({required Duration duration,required bool home,required bool lock}) {
-    final Map<String, dynamic> inputData = {
-      'home': home,
-      'lock': lock,
-    };
+  void register({required Duration duration,}) {
+
     Workmanager().registerPeriodicTask(
       "1",
       "backgroundTask",
       initialDelay: duration,
       frequency: duration, // Adjust the frequency as needed
-      inputData: inputData,
     );
   }
 
