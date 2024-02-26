@@ -11,7 +11,6 @@ import 'package:rs_wallpaper/res/component/rounded_button.dart';
 import 'package:rs_wallpaper/res/data/shared_pref/setting_datta.dart';
 import 'package:rs_wallpaper/res/my_shadow.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
-import 'package:rs_wallpaper/res/utils/utils.dart';
 
 import 'package:rs_wallpaper/view/page/category_page.dart';
 import 'package:rs_wallpaper/view/page/home_page.dart';
