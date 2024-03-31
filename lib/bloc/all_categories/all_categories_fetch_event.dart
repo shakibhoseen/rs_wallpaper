@@ -6,3 +6,4 @@ sealed class AllCategoriesFetchEvent {}
 class AllCategoriesFetchEventInit extends AllCategoriesFetchEvent{
   
 }
+class LoadOldCategoriesEvent extends AllCategoriesFetchEvent{}

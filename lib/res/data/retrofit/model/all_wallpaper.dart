@@ -20,23 +20,26 @@ class AllWallpaper {
 
 @JsonSerializable()
 class Wallpaper {
-  int id;
+  String id;
   String title;
   String image;
+  @JsonKey(name: 'fullimage')
+  String fullImage;
   //String description;
-  String tags;
+  String? tags;
   //int like;
 
-  @JsonKey(name: 'view_count')
-  int viewCount;
-  int download;
-  @JsonKey(name: 'copyright_report')
-  int copyrightReport;
+  @JsonKey(name: 'views')
+  String? viewCount;
+  String? download;
+  String? upload;
+  // @JsonKey(name: 'copyright_report')
+  // int copyrightReport;
 
   @JsonKey(name: 'user_id')
-  int userId;
-  //Uploader uploader;
-  List<Category> categories;
+  String? userId;
+  Uploader? uploader;
+  Category? categories;
   //bool likes;
 
   Wallpaper({
@@ -44,14 +47,16 @@ class Wallpaper {
     required this.title,
     required this.image,
     //required this.description,
-    required this.tags,
+     this.tags,
     //required this.like,
-    required this.viewCount,
-    required this.download,
-    required this.copyrightReport,
-    required this.userId,
-    //required this.uploader,
-    required this.categories,
+     this.viewCount,
+     this.download,
+    //required this.copyrightReport,
+     this.userId,
+     this.uploader,
+     this.categories,
+    required this.fullImage,
+     this.upload,
     //required this.likes,
   });
   factory Wallpaper.fromJson(Map<String, dynamic> json) => _$WallpaperFromJson(json);
@@ -60,7 +65,7 @@ class Wallpaper {
 
 @JsonSerializable()
 class Category {
-  int id;
+  String id;
   String name;
   String? image;
   @JsonKey(name: 'display_name')
@@ -82,7 +87,7 @@ class Category {
 
 @JsonSerializable()
 class Uploader {
-  int id;
+  String id;
   String name;
   String? image;
   int followers;

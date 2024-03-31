@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,18 +36,23 @@ class Routes {
       case RoutesName.displayWallPaperScreen:
         final wallpaper = settings.arguments as Wallpaper;
         return MaterialPageRoute(
-          builder: (context) =>  DisplayWallpaperScreen(wallpaper: wallpaper),
+          builder: (context) => DisplayWallpaperScreen(wallpaper: wallpaper),
         );
-        case RoutesName.showWallPaperByCategoryScreen:
-          final categoryId = settings.arguments as int;
+      case RoutesName.showWallPaperByCategoryScreen:
+        final categoryId = settings.arguments as String;
         return MaterialPageRoute(
-          builder: (context) =>  BlocProvider(
-            create: (context1) => WallpaperByCategoryBloc(),
-            child:
-            ShowWallpaperBy(apiHit: (BuildContext contextp){
-              contextp.read<WallpaperByCategoryBloc>().add(WallpaperByCategoryEvent(categoryId: categoryId));
-            }),
-          ),
+          builder: (context) =>
+              ShowWallpaperBy(apiHit: (BuildContext contextp) {
+            log('bloc route $categoryId');
+            final fetchBloc = contextp.read<WallpaperFetchBloc>();
+            if (fetchBloc.wallpaperIndex.containsKey(categoryId)) {
+              fetchBloc.add(
+                  WallpaperLoadOldDataEvent(categoryId: int.parse(categoryId)));
+            } else {
+              fetchBloc.add(
+                  WallpaperByCategoryEvent(categoryId: int.parse(categoryId)));
+            }
+          }),
         );
       default:
         return MaterialPageRoute(builder: (context) {

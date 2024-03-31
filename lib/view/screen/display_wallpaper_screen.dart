@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ import '../../service/service_locator.dart';
 class DisplayWallpaperScreen extends StatefulWidget {
   final Wallpaper wallpaper;
 
-  DisplayWallpaperScreen({super.key, required this.wallpaper});
+  const DisplayWallpaperScreen({super.key, required this.wallpaper});
 
   @override
   State<DisplayWallpaperScreen> createState() => _DisplayWallpaperScreenState();
@@ -32,33 +33,29 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
   final fileDownloader = FileDownloader();
 
   void getFavoriteDetails() async {
-    final has = await repo.favorite.hasParticularItem(widget.wallpaper.id);
+    final has =
+        await repo.favorite.hasParticularItem(int.parse(widget.wallpaper.id));
     heartValue.value = has;
     final recentHas =
-        await repo.recentView.hasParticularItem(widget.wallpaper.id);
+        await repo.recentView.hasParticularItem(int.parse(widget.wallpaper.id));
     if (recentHas) {
-      await repo.recentView.deleteFavoriteItem(widget.wallpaper.id);
+      await repo.recentView.deleteFavoriteItem(int.parse(widget.wallpaper.id));
     }
-    await repo.recentView.addRecentItem(FavoriteItem(
-        widget.wallpaper.id,
-        widget.wallpaper.title,
-        widget.wallpaper.image,
-        widget.wallpaper.categories[0].id,
-        widget.wallpaper.categories[0].name));
+
+    await repo.recentView.addRecentItem(convertFavoriteItem(widget.wallpaper));
   }
 
   void saveDownloadDetails() async {
     bool has = await check();
-    if(has) return;
-    await repo.download.addDownloadItem(FavoriteItem(
-        widget.wallpaper.id,
-        widget.wallpaper.title,
-        widget.wallpaper.image,
-        widget.wallpaper.categories[0].id,
-        widget.wallpaper.categories[0].name));
+    if (has) return;
+    await repo.download.addDownloadItem(convertFavoriteItem(widget.wallpaper));
   }
-  Future<bool> check()async{
-    final has = await repo.download.hasParticularItem(widget.wallpaper.id);
+
+
+
+  Future<bool> check() async {
+    final has =
+        await repo.download.hasParticularItem(int.parse(widget.wallpaper.id));
     downloadValue.value = has;
 
     return has;
@@ -77,7 +74,7 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          CustomImageCatch(wallpaper: widget.wallpaper),
+          CustomImageCatch(url: widget.wallpaper.fullImage),
           SafeArea(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,8 +108,8 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                                   color: Colors.white),
                             ),
                             Text(
-                                widget.wallpaper.categories.isNotEmpty
-                                    ? "${widget.wallpaper.categories[0].displayName}"
+                                widget.wallpaper.categories?.displayName != null
+                                    ? "${widget.wallpaper.categories?.displayName}"
                                     : 'category',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w300,
@@ -131,17 +128,12 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                                 if (!value) {
                                   // add favorite
                                   await repo.favorite.addFavoriteItem(
-                                      FavoriteItem(
-                                          widget.wallpaper.id,
-                                          widget.wallpaper.title,
-                                          widget.wallpaper.image,
-                                          widget.wallpaper.categories[0].id,
-                                          widget.wallpaper.categories[0].name));
+                                      convertFavoriteItem(widget.wallpaper));
                                   Utils.showToastMessage('add');
                                 } else {
                                   //remove
-                                  await repo.favorite
-                                      .deleteFavoriteItem(widget.wallpaper.id);
+                                  await repo.favorite.deleteFavoriteItem(
+                                      int.parse(widget.wallpaper.id));
                                   Utils.showToastMessage('remove');
                                 }
                               },
@@ -175,7 +167,7 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        print(widget.wallpaper.image);
+                        log(widget.wallpaper.image);
                       },
                     ),
 
@@ -194,43 +186,46 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                     //   }
                     // ),
                     ValueListenableBuilder<bool>(
-                      valueListenable: downloadValue,
-                      builder: (context, value, _) {
-                        return Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                DisplayImageIcons.download,
-                                color: Colors.white,
+                        valueListenable: downloadValue,
+                        builder: (context, value, _) {
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  DisplayImageIcons.download,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () async {
+                                  String extention = getFileExtensionFromUrl(
+                                      widget.wallpaper.fullImage);
+                                  DownloadManager.startDownload(
+                                      widget.wallpaper.fullImage,
+                                      '${widget.wallpaper.title}.$extention');
+                                  saveDownloadDetails();
+                                },
                               ),
-                              onPressed: () async {
-                                String extention =
-                                    getFileExtensionFromUrl(widget.wallpaper.image);
-                                DownloadManager.startDownload(widget.wallpaper.image,
-                                    '${widget.wallpaper.title}.$extention');
-                                saveDownloadDetails();
-                              },
-                            ),
-                            Visibility(
-                              visible: value,
-                              child: Positioned(child: Container(
-                                height: 12,
-                                width: 12,
-                                decoration: BoxDecoration(color: Colors.lightGreen, shape: BoxShape.circle),
-                              )),
-                            )
-                          ],
-                        );
-                      }
-                    ),
+                              Visibility(
+                                visible: value,
+                                child: Positioned(
+                                    child: Container(
+                                  height: 12,
+                                  width: 12,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.lightGreen,
+                                      shape: BoxShape.circle),
+                                )),
+                              )
+                            ],
+                          );
+                        }),
                     IconButton(
                       icon: const Icon(
                         DisplayImageIcons.home,
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        setWallpaper(widget.wallpaper.image,
+                        setWallpaper(widget.wallpaper.fullImage,
                             ScreenType.homeScreen, context);
                       },
                     ),
@@ -241,7 +236,7 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        setWallpaper(widget.wallpaper.image,
+                        setWallpaper(widget.wallpaper.fullImage,
                             ScreenType.lockScreen, context);
                       },
                     ),
@@ -256,8 +251,7 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
   }
 }
 
-void setWallpaper(
-    String url, ScreenType screenType, BuildContext context) async {
+void setWallpaper(String url, ScreenType screenType, BuildContext context) {
   ServiceSetWallPaper wallpaper = ServiceSetWallPaper();
   showDialog(
     context: context,
@@ -288,17 +282,18 @@ void setWallpaper(
           ));
     },
   );
-  final value = await wallpaper.setWallpaper(url, screenType);
-  final message = screenType == ScreenType.homeScreen
-      ? 'Successfully Changed the home screen Wallpaper'
-      : 'Successfully Changed the Lock screen Wallpaper';
-  Navigator.pop(context);
-  if (value) {
-    Utils.showFlashBarMessage(message, FlashType.success, context);
-  } else {
-    Utils.showFlashBarMessage(
-        'Opps! something went wrong', FlashType.error, context);
-  }
+  wallpaper.setWallpaper(url, screenType).then((value) {
+    final message = screenType == ScreenType.homeScreen
+        ? 'Successfully Changed the home screen Wallpaper'
+        : 'Successfully Changed the Lock screen Wallpaper';
+    Navigator.pop(context);
+    if (value) {
+      Utils.showFlashBarMessage(message, FlashType.success, context);
+    } else {
+      Utils.showFlashBarMessage(
+          'Opps! something went wrong', FlashType.error, context);
+    }
+  });
 }
 
 class ContainerWithBlur extends StatelessWidget {

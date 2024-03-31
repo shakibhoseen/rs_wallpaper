@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:rs_wallpaper/bloc/all_categories/all_categories_fetch_bloc.dart';
-
 import 'package:rs_wallpaper/res/colors.dart';
 import 'package:rs_wallpaper/res/component/both_home_lock_radio.dart';
 import 'package:rs_wallpaper/res/component/custom_popup.dart';
@@ -10,15 +8,14 @@ import 'package:rs_wallpaper/res/component/radio_list_component.dart';
 import 'package:rs_wallpaper/res/component/rounded_button.dart';
 import 'package:rs_wallpaper/res/data/shared_pref/setting_datta.dart';
 import 'package:rs_wallpaper/res/my_shadow.dart';
+import 'package:rs_wallpaper/res/utils/asset/asset_name.dart';
 import 'package:rs_wallpaper/res/utils/fonts/font.dart';
-
 import 'package:rs_wallpaper/view/page/category_page.dart';
 import 'package:rs_wallpaper/view/page/home_page.dart';
 import 'package:rs_wallpaper/view/page/profile_page.dart';
 import 'package:rs_wallpaper/view/page/random_page.dart';
 
 import '../bloc/bottom_nav/bottom_index_bloc.dart';
-import '../bloc/wallpaper/common_event_state.dart';
 import '../res/utils/operation_format.dart';
 import '../service/background_task.dart';
 
@@ -29,51 +26,59 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final pages = [
-    BlocProvider(
-      create: (context) => WallpaperFetchBloc(),
-      child: const HomePage(),
-    ),
-    BlocProvider(
-      create: (context) => AllCategoriesFetchBloc(),
-      child: const CategoryPage(),
-    ),
+    const HomePage(),
+    const CategoryPage(),
     const RandomPage(),
     const ProfilePage(),
   ];
   final backgroundTask = BackgroundTask();
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
-  final switchListener = ValueNotifier<(bool, String, String)>((false, _24Hour, 'Home Screen'));
+  final switchListener =
+      ValueNotifier<(bool, String, String)>((false, _24Hour, 'Home Screen'));
   final settingData = SettingData();
 
   void getSwitchValue() async {
     final value = await settingData.getSwitchValue();
     timeShortType = value.$2;
     final durationTitle = OperationFormat.getValueGenerate(value.$2);
-    final screenStr = OperationFormat.getFullScreenNameFromString(screenType: value.$3);
-    final homeLock = OperationFormat.getBooleanFromScreenFormat(screenType: value.$3);
+    final screenStr =
+        OperationFormat.getFullScreenNameFromString(screenType: value.$3);
+    final homeLock =
+        OperationFormat.getBooleanFromScreenFormat(screenType: value.$3);
     home = homeLock.$1;
     lock = homeLock.$2;
     switchListener.value = (value.$1, durationTitle.$2, screenStr);
   }
 
   bool home = true, lock = false;
-  String timeShortType ='24h';
+  String timeShortType = '24h';
 
-  void setSwitchValue(bool activate, ) async {
-    await settingData.setSwitchValue(activate: activate, timeFormat: timeShortType, screenType: home&&lock ?'both': lock?'lock':'home');
+  void setSwitchValue(
+    bool activate,
+  ) async {
+    await settingData.setSwitchValue(
+        activate: activate,
+        timeFormat: timeShortType,
+        screenType: home && lock
+            ? 'both'
+            : lock
+                ? 'lock'
+                : 'home');
     if (activate) {
-      backgroundTask.register(duration: OperationFormat.getValueGenerate(timeShortType).$1,);
+      backgroundTask.register(
+        duration: OperationFormat.getValueGenerate(timeShortType).$1,
+      );
     } else {
       backgroundTask.unregisterBackgroundTask();
     }
     getSwitchValue();
   }
 
-  void inactiveSwitch()async{
+  void inactiveSwitch() async {
     await settingData.setSwitchOnly(activate: false);
+    backgroundTask.unregisterBackgroundTask();
     getSwitchValue();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                       gradient: MyColors.tabGradient,
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: MyShadow.boxShadowNeuMorphism()),
-                  child: const Icon(BottomNavBarIcon.category)),
+                  child: Image.asset(AssetName.menuIconPng)),
             ),
           ),
           title: BlocBuilder<BottomIndexBloc, BottomIndexState>(
@@ -107,7 +112,17 @@ class HomeScreen extends StatelessWidget {
             },
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Ink(
+                  padding: const EdgeInsets.all(7),
+                  decoration: BoxDecoration(
+                      //gradient: MyColors.tabGradient,
+                      borderRadius: BorderRadius.circular(10),
+                      //boxShadow: MyShadow.boxShadowNeuMorphism()
+                      ),
+                  child: Image.asset(AssetName.searchPng, color: MyColors.activeTextColor,)),
+            ),
           ],
         ),
         bottomNavigationBar: Container(
@@ -212,7 +227,8 @@ class HomeScreen extends StatelessWidget {
                         Text(
                           'Auto Change',
                           style: TextStyle(
-                              color: value.$1 ? Colors.lightGreen : Colors.white),
+                              color:
+                                  value.$1 ? Colors.lightGreen : Colors.white),
                         ),
                         Text(
                           '${value.$2} (${value.$3})',
@@ -227,7 +243,7 @@ class HomeScreen extends StatelessWidget {
                     Switch(
                         value: value.$1,
                         onChanged: (value) {
-                          if(!value){
+                          if (!value) {
                             inactiveSwitch();
                             return;
                           }
@@ -236,7 +252,7 @@ class HomeScreen extends StatelessWidget {
                             (p0) => popUpDesign(
                               () {
                                 setSwitchValue(value);
-                                   Navigator.pop(p0);
+                                Navigator.pop(p0);
                               },
                             ),
                           );
@@ -250,7 +266,14 @@ class HomeScreen extends StatelessWidget {
             itemDesign(icon: DrawerIcons.shareIcon, title: 'Share'),
             itemDesign(icon: DrawerIcons.starIcon, title: 'Rate us'),
             const SizedBox(height: 40),
-            itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'),
+            Builder(
+              builder: (context) {
+                return GestureDetector(onTap: (){
+                  CustomPopup.getWhiteDialog(context,  );
+                },
+                    child: itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'));
+              }
+            ),
             itemDesign(icon: DrawerIcons.aboutUs, title: 'About us'),
             itemDesign(icon: Icons.copyright, title: 'Copyright'),
             const SizedBox(height: 40),
@@ -281,16 +304,18 @@ class HomeScreen extends StatelessWidget {
               },
               timeFormat: timeShortType,
             ),
-            BothHomeLockDesign(feedBack: (home, lock) {
-              this.home = home;
-              this.lock = lock;
-            }, home: home, lock: lock,),
+            BothHomeLockDesign(
+              feedBack: (home, lock) {
+                this.home = home;
+                this.lock = lock;
+              },
+              home: home,
+              lock: lock,
+            ),
             SizedBox(
               height: 8,
             ),
-            RoundedButton(
-                title: 'Set',
-                onPress: onPressed)
+            RoundedButton(title: 'Set', onPress: onPressed)
           ],
         ),
       ),

@@ -17,6 +17,7 @@ class FavoriteRepository{
 
     // Register the adapter
     Hive.registerAdapter(FavoriteItemAdapter()); // Add this line
+    Hive.registerAdapter(CategoryItemAdapter()); // Add this line
   }
 
 

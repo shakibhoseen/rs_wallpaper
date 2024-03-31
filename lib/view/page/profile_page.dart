@@ -160,22 +160,21 @@ class _ProfilePageState extends State<ProfilePage> {
                       itemBuilder: (context, index) {
                         final item = list[index];
                         final wallpaperItem = wallpaper.Wallpaper(
-                            id: item.id,
+                            id: '${item.id}',
                             title: item.title,
                             image: item.image,
                             tags: '',
-                            viewCount: 0,
-                            download: 0,
-                            copyrightReport: 0,
-                            userId: 0,
-                            categories: [
+                            viewCount: '0',
+                            download: '0',
+                            userId: '0',
+                            categories:
                               wallpaper.Category(
-                                  id: item.categoryId,
+                                  id: '${item.categoryId}',
                                   name: item.categoryName,
                                   image: null,
                                   displayName: item.categoryName,
-                                  parentCategoryId: null)
-                            ]);
+                                  parentCategoryId: null), fullImage: item.fullImage
+                            );
 
                         return GestureDetector(
                           onTap: () {

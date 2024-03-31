@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +11,7 @@ import '../../res/utils/route/routes_name.dart';
 class ShowWallpaperBy extends StatelessWidget {
   final ScrollController _scrollController = ScrollController();
   Function(BuildContext) apiHit;
-   ShowWallpaperBy({super.key, required this.apiHit}) ;
+  ShowWallpaperBy({super.key, required this.apiHit});
 
   void _onScroll(BuildContext context) {
     if (_scrollController.position.pixels ==
@@ -25,9 +27,9 @@ class ShowWallpaperBy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     apiHit(context);
+    apiHit(context);
     //context.read<WallpaperFetchBloc>().add(WallpaperFetchPageEvent());
-    _scrollController.addListener((){
+    _scrollController.addListener(() {
       _onScroll(context);
     });
     List<Wallpaper> wallpapers = [];
@@ -37,19 +39,23 @@ class ShowWallpaperBy extends StatelessWidget {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric( horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: [
-                    BlocBuilder<WallpaperByCategoryBloc, WallpaperFetchState>(
+                    BlocBuilder<WallpaperFetchBloc, WallpaperFetchState>(
                       builder: (context, state) {
-                        if(state is SuccessfulState){
+                        log('state is category wallpaper ${state} ${state is ErrorState ? state.error : null}');
+                        if (state is SuccessfulState) {
                           wallpapers.addAll(state.wallpaper.data);
+                        } else if (state is LoadOldDataState) {
+                          wallpapers.clear();
+                          wallpapers.addAll(state.data);
                         }
                         return SliverGrid.builder(
                           itemCount: wallpapers.length,
                           gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 8.0,
                             mainAxisSpacing: 8.0,
@@ -58,8 +64,10 @@ class ShowWallpaperBy extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final item = wallpapers[index];
                             return GestureDetector(
-                              onTap: (){
-                                Navigator.of(context).pushNamed(RoutesName.displayWallPaperScreen, arguments: item);
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                    RoutesName.displayWallPaperScreen,
+                                    arguments: item);
                               },
                               child: Container(
                                 clipBehavior: Clip.antiAlias,
@@ -80,13 +88,13 @@ class ShowWallpaperBy extends StatelessWidget {
               builder: (context, state) {
                 return state is LoadingState
                     ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  ),
-                )
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      )
                     : Container();
               },
             )

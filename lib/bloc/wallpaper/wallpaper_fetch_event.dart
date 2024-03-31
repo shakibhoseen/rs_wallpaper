@@ -5,11 +5,17 @@ part of 'common_event_state.dart';
 sealed class WallpaperFetchEvent {}
 
 class WallpaperFetchPageEvent extends WallpaperFetchEvent {
-  
+
   WallpaperFetchPageEvent();
 }
 
 class WallpaperByCategoryEvent extends WallpaperFetchEvent {
   final int categoryId;
   WallpaperByCategoryEvent({required this.categoryId});
+}
+
+class WallpaperLoadOldDataEvent extends WallpaperFetchEvent{
+  final int categoryId;
+
+  WallpaperLoadOldDataEvent({required this.categoryId});
 }

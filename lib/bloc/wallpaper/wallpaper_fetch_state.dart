@@ -20,3 +20,9 @@ class ErrorState extends WallpaperFetchState {
   ErrorState({required this.error});
 
 }
+
+class LoadOldDataState extends WallpaperFetchState {
+  final List<Wallpaper> data;
+  LoadOldDataState({required this.data});
+
+}

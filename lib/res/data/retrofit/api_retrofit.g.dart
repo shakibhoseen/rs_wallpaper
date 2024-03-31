@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://wallpaper.rsdesignerhub.com/api/v1/rswp/';
+    baseUrl ??= 'https://www.pixahunt.com/api/wallpaper/';//'https://wallpaper.rsdesignerhub.com/api/v1/rswp/';
   }
 
   final Dio _dio;
@@ -34,7 +34,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'wallpaper/all',
+              'all',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -96,7 +96,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'wallpaper/trending',
+              'trending',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -131,7 +131,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'wallpaper/trending',
+              'trending',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -228,7 +228,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'category/all',
+              'catapi/1',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -244,12 +244,12 @@ class _ApiService implements ApiService {
   @override
   Future<AllWallpaper> categoryWallpaper(
     String id,
-    String userId,
+    int page,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'category_id': id,
-      r'user_id': userId,
+      r'id': id,
+      r'page': page,
     };
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
@@ -261,7 +261,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              'wallpaper/category',
+              'scatapi',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -270,6 +270,7 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
+    log('catid: $id , page:$page');
     final value = AllWallpaper.fromJson(_result.data!);
     return value;
   }

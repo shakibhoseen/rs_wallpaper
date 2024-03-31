@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
@@ -9,13 +11,13 @@ import 'model/all_wallpaper.dart';
 part "api_retrofit.g.dart";
 
 
-@RestApi(baseUrl: "https://wallpaper.rsdesignerhub.com/api/v1/rswp/") // replace with your base URL
+@RestApi(baseUrl: "https://www.pixahunt.com/api/wallpaper/") // replace with your base URL
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
 
 
-  @GET("wallpaper/all")
+  @GET("all")
   Future<AllWallpaper> allWallpaper(@Query("page") int page);
 
   @GET("wallpaper/all")
@@ -25,7 +27,7 @@ abstract class ApiService {
     @Query("page") int page,
   );
 
-  @GET("wallpaper/trending")
+  @GET("trending")
   Future<AllWallpaper> trendingWallpaper(@Query("page") int page);
 
   @GET("wallpaper/trending")
@@ -49,13 +51,13 @@ abstract class ApiService {
     @Query("page") int page,
   );
 
-   @GET("category/all")
+   @GET("catapi/1") // use a  category
    Future<AllCategories> allCategory();
 
-  @GET("wallpaper/category")
+  @GET("scatapi") // category by wallpaper
   Future<AllWallpaper> categoryWallpaper(
-      @Query("category_id") String id,
-      @Query("user_id") String userId
+      @Query("id") String id,
+      @Query("page") int page,
       );
 
 
@@ -83,7 +85,7 @@ abstract class ApiService {
       } else {
         print('Error: $e');
       }
-      throw e; // Rethrow the error to allow higher-level error handling
+      rethrow; // Rethrow the error to allow higher-level error handling
     }
   }
 }
