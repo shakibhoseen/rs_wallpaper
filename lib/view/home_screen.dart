@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:rs_wallpaper/res/colors.dart';
+import 'package:rs_wallpaper/res/component/back_button_widget.dart';
 import 'package:rs_wallpaper/res/component/both_home_lock_radio.dart';
 import 'package:rs_wallpaper/res/component/custom_popup.dart';
 import 'package:rs_wallpaper/res/component/radio_list_component.dart';
@@ -83,91 +85,100 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getSwitchValue();
-    return SafeArea(
-      child: Scaffold(
-        key: _key,
-        drawer: drawerItems(),
-        appBar: AppBar(
-          leading: Center(
-            child: InkWell(
-              radius: 10,
-              onTap: () {
-                _key.currentState?.openDrawer();
-              },
-              child: Ink(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                      gradient: MyColors.tabGradient,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: MyShadow.boxShadowNeuMorphism()),
-                  child: Image.asset(AssetName.menuIconPng)),
+    return Scaffold(
+      key: _key,
+      drawer: drawerItems(),
+      extendBody: true,
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        //shadowColor: Colors.blue,
+        leading: Center(
+          child: BackButtonWidget(
+            child: Image.asset(AssetName.menuIconPng),
+            onPress: () => _key.currentState?.openDrawer(),
+          ),
+          // InkWell(
+          //   radius: 10,
+          //   onTap: () {
+          //     _key.currentState?.openDrawer();
+          //   },
+          //   child: Ink(
+          //       padding: const EdgeInsets.all(7),
+          //       decoration: BoxDecoration(
+          //           gradient: MyColors.tabGradient,
+          //           borderRadius: BorderRadius.circular(10),
+          //           boxShadow: MyShadow.boxShadowNeuMorphism()),
+          //       child: Image.asset(AssetName.menuIconPng)),
+          // ),
+        ),
+        title: BlocBuilder<BottomIndexBloc, BottomIndexState>(
+          builder: (BuildContext context, state) {
+            return Text(
+              nameList[state is BottomIndexChangedState ? state.index : 0],
+              style: const TextStyle(color: Colors.white),
+            );
+          },
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Ink(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  //gradient: MyColors.tabGradient,
+                  borderRadius: BorderRadius.circular(10),
+                  //boxShadow: MyShadow.boxShadowNeuMorphism()
+                ),
+                child: Image.asset(
+                  AssetName.searchPng,
+                  color: MyColors.activeTextColor,
+                )),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          boxShadow: MyShadow.boxShadowNeuMorphism(),
+          color: MyColors.canvasColor,
+        ),
+        child: GNav(
+          onTabChange: (index) => context
+              .read<BottomIndexBloc>()
+              .add(BottomChangedIndexEvent(index: index)),
+          selectedIndex: 0,
+          gap: 4,
+          tabBackgroundGradient: MyColors.tabGradient,
+          activeColor: Colors.white,
+          color: MyColors.activeTextColor,
+          tabBorderRadius: 25,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+          tabs: const [
+            GButton(
+              icon: BottomNavBarIcon.home,
+              text: "Home",
             ),
-          ),
-          title: BlocBuilder<BottomIndexBloc, BottomIndexState>(
-            builder: (BuildContext context, state) {
-              return Text(
-                nameList[state is BottomIndexChangedState ? state.index : 0],
-                style: const TextStyle(color: Colors.white),
-              );
-            },
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Ink(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                      //gradient: MyColors.tabGradient,
-                      borderRadius: BorderRadius.circular(10),
-                      //boxShadow: MyShadow.boxShadowNeuMorphism()
-                      ),
-                  child: Image.asset(AssetName.searchPng, color: MyColors.activeTextColor,)),
+            GButton(
+              icon: BottomNavBarIcon.category,
+              text: "Category",
+            ),
+            GButton(
+              icon: BottomNavBarIcon.random,
+              text: "Random",
+            ),
+            GButton(
+              icon: BottomNavBarIcon.profileIcon,
+              text: "Profile",
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            boxShadow: MyShadow.boxShadowNeuMorphism(),
-            color: MyColors.canvasColor,
-          ),
-          child: GNav(
-            onTabChange: (index) => context
-                .read<BottomIndexBloc>()
-                .add(BottomChangedIndexEvent(index: index)),
-            selectedIndex: 0,
-            gap: 4,
-            tabBackgroundGradient: MyColors.tabGradient,
-            activeColor: Colors.white,
-            color: MyColors.activeTextColor,
-            tabBorderRadius: 25,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-            tabs: const [
-              GButton(
-                icon: BottomNavBarIcon.home,
-                text: "Home",
-              ),
-              GButton(
-                icon: BottomNavBarIcon.category,
-                text: "Category",
-              ),
-              GButton(
-                icon: BottomNavBarIcon.random,
-                text: "Random",
-              ),
-              GButton(
-                icon: BottomNavBarIcon.profileIcon,
-                text: "Profile",
-              ),
-            ],
-          ),
-        ),
-        body: BlocBuilder<BottomIndexBloc, BottomIndexState>(
-          builder: (context, state) {
-            int index = state is BottomIndexChangedState ? state.index : 0;
-            return pages[index];
-          },
-        ),
+      ),
+      body: BlocBuilder<BottomIndexBloc, BottomIndexState>(
+        builder: (context, state) {
+          int index = state is BottomIndexChangedState ? state.index : 0;
+          return pages[index];
+        },
       ),
     );
   }
@@ -206,7 +217,7 @@ class HomeScreen extends StatelessWidget {
             //     )
             //   ],
             // ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             itemDesign(icon: DrawerIcons.wallpaperIcon, title: 'Wallpaper'),
@@ -266,18 +277,36 @@ class HomeScreen extends StatelessWidget {
             itemDesign(icon: DrawerIcons.shareIcon, title: 'Share'),
             itemDesign(icon: DrawerIcons.starIcon, title: 'Rate us'),
             const SizedBox(height: 40),
+            Builder(builder: (context) {
+              return itemDesign(
+                icon: DrawerIcons.contactIcon,
+                title: 'Contact us',
+                onTap: () {
+                  final content = DialogContentGenerator().generate(0);
+
+                  CustomPopup.getWhiteDialog(context,
+                      title: content.$1, content: content.$2);
+                },
+              );
+            }),
+            Builder(
+              builder: (context) => itemDesign(
+                  icon: DrawerIcons.aboutUs,
+                  title: 'About us',
+                  onTap: () {
+                    final content = DialogContentGenerator().generate(1);
+                    CustomPopup.getWhiteDialog(context,
+                        title: content.$1, content: content.$2);
+                  }),
+            ),
+            itemDesign(icon: Icons.copyright, title: 'Copyright', onTap: () {}),
+            const SizedBox(height: 40),
             Builder(
               builder: (context) {
-                return GestureDetector(onTap: (){
-                  CustomPopup.getWhiteDialog(context,  );
-                },
-                    child: itemDesign(icon: DrawerIcons.contactIcon, title: 'Contact us'));
+                return itemDesign(
+                    icon: DrawerIcons.exitToApp, title: 'Exit', onTap: ()=>SystemNavigator.pop());
               }
             ),
-            itemDesign(icon: DrawerIcons.aboutUs, title: 'About us'),
-            itemDesign(icon: Icons.copyright, title: 'Copyright'),
-            const SizedBox(height: 40),
-            itemDesign(icon: DrawerIcons.exitToApp, title: 'Exit'),
           ],
         ),
       ),
@@ -291,11 +320,11 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Adjust Auto-Change Schedule',
               style: TextStyle(fontSize: 18, color: MyColors.activeTextColor),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             RadioListComponent(
@@ -312,7 +341,7 @@ class HomeScreen extends StatelessWidget {
               home: home,
               lock: lock,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             RoundedButton(title: 'Set', onPress: onPressed)
@@ -323,20 +352,25 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-Widget itemDesign({required IconData icon, required String title}) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-      children: [
-        Icon(icon),
-        const SizedBox(
-          width: 14,
-        ),
-        Text(
-          title,
-          style: const TextStyle(color: Colors.white),
-        )
-      ],
+Widget itemDesign(
+    {required IconData icon, required String title, VoidCallback? onTap}) {
+  return InkWell(
+    onTap: onTap,
+    child: Ink(
+      //color: Colors.transparent,
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Icon(icon),
+          const SizedBox(
+            width: 14,
+          ),
+          Text(
+            title,
+            style: const TextStyle(color: Colors.white),
+          )
+        ],
+      ),
     ),
   );
 }

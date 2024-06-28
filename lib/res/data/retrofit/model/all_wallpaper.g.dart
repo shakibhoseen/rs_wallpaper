@@ -8,6 +8,7 @@ part of 'all_wallpaper.dart';
 
 AllWallpaper _$AllWallpaperFromJson(Map<String, dynamic> json) => AllWallpaper(
       success: json['success'] as bool,
+      pagination: Pagination.fromJson(json['pagination']),
       data: (json['data'] as List<dynamic>)
           .map((e) => Wallpaper.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -79,3 +80,11 @@ Map<String, dynamic> _$UploaderToJson(Uploader instance) => <String, dynamic>{
       'following': instance.following,
       'followed_by_me': instance.followedByMe,
     };
+
+Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(page: json['page'] as int , totalPage: json['total_pages'] as  int, totalRows: json['total_rows'] as String);
+
+Map<String, dynamic> _$PaginationToJson(Pagination instance) => <String, dynamic>{
+      'page': instance.page,
+      'total_pages' : instance.totalPage,
+      'total_rows' : instance.totalRows,
+};

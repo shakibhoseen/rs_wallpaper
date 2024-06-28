@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://www.pixahunt.com/api/wallpaper/';//'https://wallpaper.rsdesignerhub.com/api/v1/rswp/';
+    baseUrl ??= 'https://gdgtverse.com/api/wallpaper/';//'https://www.pixahunt.com/api/wallpaper/';//'https://wallpaper.rsdesignerhub.com/api/v1/rswp/';
   }
 
   final Dio _dio;

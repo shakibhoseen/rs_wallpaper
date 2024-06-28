@@ -11,7 +11,7 @@ import 'model/all_wallpaper.dart';
 part "api_retrofit.g.dart";
 
 
-@RestApi(baseUrl: "https://www.pixahunt.com/api/wallpaper/") // replace with your base URL
+@RestApi(baseUrl: "https://gdgtverse.com/api/wallpaper/") // replace with your base URL
 abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 

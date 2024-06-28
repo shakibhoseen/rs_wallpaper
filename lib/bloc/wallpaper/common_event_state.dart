@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:rs_wallpaper/res/data/shared_pref/setting_datta.dart';
 
 import '../../res/data/retrofit/model/all_wallpaper.dart';
 

@@ -51,8 +51,6 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
     await repo.download.addDownloadItem(convertFavoriteItem(widget.wallpaper));
   }
 
-
-
   Future<bool> check() async {
     final has =
         await repo.download.hasParticularItem(int.parse(widget.wallpaper.id));
@@ -71,6 +69,7 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
   Widget build(BuildContext context) {
     getFavoriteDetails();
     check();
+    log("image ${widget.wallpaper.fullImage}");
     return Scaffold(
       body: Stack(
         children: [
@@ -86,10 +85,8 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                     BackButtonWidget(
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 2),
-                        child: Icon(
-                          DisplayImageIcons.backArrow,
-                          size: 15,
-                        ),
+                        child: Icon(DisplayImageIcons.backArrow,
+                            size: 15, color: Colors.white),
                       ),
                       onPress: () {
                         Navigator.pop(context);
@@ -122,6 +119,7 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
                         valueListenable: heartValue,
                         builder: (context, value, _) {
                           return IconButton(
+                              style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color(0x16151E40))),
                               onPressed: () async {
                                 heartValue.value = !value;
 
@@ -309,8 +307,9 @@ class ContainerWithBlur extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-        color: Colors.indigo
-            .withOpacity(0.3), // Set the background color with opacity
+        color: //const Color(0x16151E40)
+        Colors.white
+            .withOpacity(0.1), // Set the background color with opacity
       ),
       child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 35.0, sigmaY: 35.0), child: child),

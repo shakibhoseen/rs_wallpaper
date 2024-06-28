@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
     fetchBloc = context.read<WallpaperFetchBloc>();
     _scrollController = ScrollController();
     if (fetchBloc.wallpaperIndex.containsKey('-1')) {
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     final handel = context.read<AllCategoriesFetchBloc>();
     handel.categories.isEmpty ? handel.add(AllCategoriesFetchEventInit()) :
      handel.add(LoadOldCategoriesEvent());
-    super.initState();
+
   }
 
   void _onScroll() {

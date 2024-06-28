@@ -7,15 +7,31 @@ part 'all_wallpaper.g.dart';
 class AllWallpaper {
   bool success;
   List<Wallpaper> data;
+  Pagination pagination;
 
   AllWallpaper({
     required this.success,
     required this.data,
+    required this.pagination,
   });
 
   factory AllWallpaper.fromJson(Map<String, dynamic> json)=> _$AllWallpaperFromJson(json);
   Map<String, dynamic> toJson() => _$AllWallpaperToJson(this);
 
+}
+
+@JsonSerializable()
+class Pagination{
+  int page;
+  @JsonKey(name: 'total_pages',)
+  int totalPage;
+  @JsonKey(name: 'total_rows')
+  String totalRows;
+
+  Pagination({required this.page, required this.totalPage, required this.totalRows});
+
+  factory Pagination.fromJson(Map<String, dynamic> json) => _$PaginationFromJson(json);
+  Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }
 
 @JsonSerializable()

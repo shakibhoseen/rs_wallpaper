@@ -23,12 +23,15 @@ void callbackDispatcher() {
 }
 
 Future<void> yourFunction() async{
-  final value = await SettingData().getSwitchValue();
-  final  scren = value.$3;
-  final itemHomeLock = OperationFormat.getBooleanFromScreenFormat(screenType: scren);
+  final setting = SettingData();
+  final value = await setting.getSwitchValue();
+  final  pageLength = await setting.getPageLength();
+  if(pageLength == 0) return;
+  final  screen = value.$3;
+  final itemHomeLock = OperationFormat.getBooleanFromScreenFormat(screenType: screen);
   bool homeValue = itemHomeLock.$1;
   bool lockValue = itemHomeLock.$2;
-  print('home- $homeValue , lock- $lockValue');
+  //log('home- $homeValue , lock- $lockValue');
   ScreenType v = ScreenType.homeScreen;
 
   if(homeValue && lockValue){
@@ -40,13 +43,13 @@ Future<void> yourFunction() async{
 
   // Your function logic goes here
   final random = Random();
-  int page = random.nextInt(17);
+  int page = random.nextInt(pageLength);
   try{
     final allWallpaper = await ApiService(Dio()).allWallpaper(page);
     final list = allWallpaper.data;
     if(list.isNotEmpty){
       int index = random.nextInt(list.length);
-      await setWallpaper(list[index].image, v );
+      await setWallpaper(list[index].fullImage, v );
     }
   }catch(e){//
   }
