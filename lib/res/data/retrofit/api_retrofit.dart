@@ -60,6 +60,8 @@ abstract class ApiService {
       @Query("page") int page,
       );
 
+  @GET("rendom")
+  Future<AllWallpaper> randomWallpaper(@Query("page") int page);
 
     // Handle the response and potential errors
   static handleResponse<T>(Response<T> response) {

@@ -95,6 +95,7 @@ class HomeScreen extends StatelessWidget {
         //shadowColor: Colors.blue,
         leading: Center(
           child: BackButtonWidget(
+            paddingAll: 6,
             child: Image.asset(AssetName.menuIconPng),
             onPress: () => _key.currentState?.openDrawer(),
           ),
@@ -132,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Image.asset(
                   AssetName.searchPng,
-                  color: MyColors.activeTextColor,
+                  color: MyColors.inactiveTextColor,
                 )),
           ),
         ],
@@ -367,7 +368,7 @@ Widget itemDesign(
           ),
           Text(
             title,
-            style: const TextStyle(color: Colors.white),
+            style:  TextStyle(color: onTap!=null? Colors.white : MyColors.inactiveTextColor),
           )
         ],
       ),

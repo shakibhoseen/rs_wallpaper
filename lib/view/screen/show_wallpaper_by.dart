@@ -84,7 +84,7 @@ class ShowWallpaperBy extends StatelessWidget {
                 ),
               ),
             ),
-            BlocBuilder<WallpaperByCategoryBloc, WallpaperFetchState>(
+            BlocBuilder<WallpaperFetchBloc, WallpaperFetchState>(
               builder: (context, state) {
                 return state is LoadingState
                     ? const Center(
@@ -95,7 +95,7 @@ class ShowWallpaperBy extends StatelessWidget {
                           ),
                         ),
                       )
-                    : Container();
+                    : const SizedBox.shrink();
               },
             )
           ],

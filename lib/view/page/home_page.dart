@@ -39,9 +39,9 @@ class _HomePageState extends State<HomePage> {
     }
     _scrollController.addListener(_onScroll);
     final handel = context.read<AllCategoriesFetchBloc>();
-    handel.categories.isEmpty ? handel.add(AllCategoriesFetchEventInit()) :
-     handel.add(LoadOldCategoriesEvent());
-
+    handel.categories.isEmpty
+        ? handel.add(AllCategoriesFetchEventInit())
+        : handel.add(LoadOldCategoriesEvent());
   }
 
   void _onScroll() {
@@ -56,8 +56,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void getCategoryIdWallpaper(int categoryId){
-    _scrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
+  void getCategoryIdWallpaper(int categoryId) {
+    _scrollController.animateTo(0,
+        duration: const Duration(milliseconds: 200), curve: Curves.bounceIn);
     selectedCategory = categoryId;
     if (fetchBloc.wallpaperIndex.containsKey('$categoryId')) {
       fetchBloc.add(WallpaperLoadOldDataEvent(categoryId: categoryId));
@@ -67,29 +68,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget showList(List<Category> data, String msg) {
-    return HomePageDesign.listSelectUi(listString: [
-      ('All', '-1'),
-      ...data.map((e) => ('${e.displayName}', e.id)).toList()
-    ], onTap: (id) {
-      wallpapers.clear();
-      getCategoryIdWallpaper(int.parse(id));
-    });
+    return HomePageDesign.listSelectUi(
+        listString: [
+          ('All', '-1'),
+          ...data.map((e) => ('${e.displayName}', e.id)).toList()
+        ],
+        onTap: (id) {
+          wallpapers.clear();
+          getCategoryIdWallpaper(int.parse(id));
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         BlocBuilder<category.AllCategoriesFetchBloc,
             category.AllCategoriesFetchState>(
           builder: (context, state) {
-           return state.join(
-                    (initial) => const Text('init', style: TextStyle(color: Colors.white),),
-                    (loading) => const Text('Loading..', style: TextStyle(color: Colors.white),),
-                    (success) => showList(success.allCategories.data, 'success'),
-                (error) => Text('Opp\'s! ${error.error}', style: const TextStyle(color: Colors.white),),
-                    (oldData) => showList(oldData.categories, 'oldData'),);
+            return state.join(
+              (initial) => const Text(
+                'init',
+                style: TextStyle(color: Colors.white),
+              ),
+              (loading) => const Text(
+                'Loading..',
+                style: TextStyle(color: Colors.white),
+              ),
+              (success) => showList(success.allCategories.data, 'success'),
+              (error) => Text(
+                'Opp\'s! ${error.error}',
+                style: const TextStyle(color: Colors.white),
+              ),
+              (oldData) => showList(oldData.categories, 'oldData'),
+            );
           },
         ),
         const Divider(
@@ -108,13 +120,35 @@ class _HomePageState extends State<HomePage> {
                       wallpapers.addAll(state.wallpaper.data);
                     } else if (state is ErrorState) {
                       return SliverToBoxAdapter(
+                        child: Center(
                           child: Text(
-                        state.error,
-                        style: const TextStyle(color: Colors.white),
-                      ));
+                            state.error,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
                     } else if (state is LoadOldDataState) {
                       wallpapers.clear();
                       wallpapers.addAll(state.data);
+                    }else if(state is WallpaperFetchInitial){
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(
+                            'Initializing',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
+                     if (wallpapers.isEmpty ) {
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(
+                            'No Wallpaper found',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
                     }
                     return SliverGrid.builder(
                       itemCount: wallpapers.length,

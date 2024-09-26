@@ -5,7 +5,8 @@ import '../colors.dart';
 class BackButtonWidget extends StatefulWidget {
   final Widget child;
   final VoidCallback onPress;
-  const BackButtonWidget({super.key, required this.child, required this.onPress});
+  final double? paddingAll;
+  const BackButtonWidget({super.key, required this.child, required this.onPress, this.paddingAll});
 
   @override
   State<BackButtonWidget> createState() => _BackButtonWidgetState();
@@ -43,7 +44,7 @@ class _BackButtonWidgetState extends State<BackButtonWidget> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding:  EdgeInsets.all(widget.paddingAll ??8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: isPress? Colors.yellow: MyColors.borderButtonColor, ),

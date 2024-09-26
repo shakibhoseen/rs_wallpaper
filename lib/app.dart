@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AllCategoriesFetchBloc(),
         ),
+        BlocProvider(
+          create: (context) => RandomWallpaperFetchBloc(),
+        ),
       ],
       child: const MyAppView(),
     );

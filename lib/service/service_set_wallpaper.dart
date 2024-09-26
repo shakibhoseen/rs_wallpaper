@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
@@ -25,15 +26,15 @@ class ServiceSetWallPaper{
       // final file = await createTemp('walpaper.jpg');
       // await file.writeAsBytes(imageBytes);
 
-      print('before file given.');
+      log('..............................before file given.');
       //final localFile = await getCachedFile(imageUrl);
       var file = await DefaultCacheManager().getSingleFile(imageUrl);
 
       if (file == null) {
-        print('Error: Image not found in cache.');
+        log('...........................Error: Image not found in cache.');
         return false;
       }
-      print('file is given');
+      log('.............................file is given');
       var type = WallpaperManager.BOTH_SCREEN;
       if(screenType== ScreenType.homeScreen){
         type = WallpaperManager.HOME_SCREEN;
@@ -45,11 +46,11 @@ class ServiceSetWallPaper{
       final result = await WallpaperManager.setWallpaperFromFile(
        file.path
       , type);
-      print(' setting wallpaper: $result');
+      log('............................... setting wallpaper: $result');
       return result;
     } catch (e) {
       // Handle exceptions
-      print('Error setting wallpaper: $e');
+      log('.......................Error setting wallpaper: $e');
       return false;
     }
   }

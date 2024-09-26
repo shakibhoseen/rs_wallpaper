@@ -30,7 +30,7 @@ class WallpaperFetchBloc
 
         _pageApiHolder = PageApiHolder.withIncreasedPage(_pageApiHolder);
         final page = _pageApiHolder.page;
-        Utils.showToastMessage('page is $page');
+        //Utils.showToastMessage('page is $page');
         emit(LoadingState());
 
         final allWallpaper = id >= 0

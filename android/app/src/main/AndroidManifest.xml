@@ -3,8 +3,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission-group.STORAGE" />
+
+    <!-- Ads Permission for Android 12 or higher -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+
     <application
-        android:label="rs_wallpaper"
+        android:label="RS Wallpaper"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
@@ -34,5 +38,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8480119277588398~1814163367"/>
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+<!--            android:value="ca-app-pub-3940256099942544~3347511713"/>-->
     </application>
 </manifest>

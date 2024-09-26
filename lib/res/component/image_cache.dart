@@ -22,7 +22,7 @@ class CustomImageCatch extends StatelessWidget {
               ? Text('${(downloadProgress.progress! *100).toStringAsFixed(2)} %')
               : const CircularProgressIndicator()),
       //placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
+      errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
     );
   }
 }

@@ -25,7 +25,7 @@ class MyAppView extends StatelessWidget {
         useMaterial3: true,
         fontFamily:  'Poppins',
       ),
-       initialRoute: RoutesName.homeScreen,
+       initialRoute: RoutesName.splashScreen,
        onGenerateRoute: Routes.generateRoute,
     );
  

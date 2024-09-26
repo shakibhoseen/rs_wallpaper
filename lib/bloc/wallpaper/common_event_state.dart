@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:rs_wallpaper/res/data/shared_pref/setting_datta.dart';
 
+import '../../res/constant.dart';
 import '../../res/data/retrofit/model/all_wallpaper.dart';
 
 
@@ -18,6 +19,7 @@ part 'wallpaper_fetch_state.dart';
 
 part 'wallpaper_fetch_bloc.dart';
 part 'wallpaper_by_category_bloc.dart';
+part 'random_wallpaper_fetch_bloc.dart';
 
 class CommonEventState{
 
