@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:rs_wallpaper/service/background_task.dart';
 import 'package:rs_wallpaper/service/service_locator.dart';
 
@@ -29,7 +29,7 @@ import 'app.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(MobileAds.instance.initialize());
+  //unawaited(MobileAds.instance.initialize());
   // await Workmanager().initialize(
   //   callbackDispatcher,
   // );

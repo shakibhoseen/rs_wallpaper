@@ -139,6 +139,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       );
+                    }else if(state is LoadingState){
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Text(
+                            'Loading...',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
                     }
                      if (wallpapers.isEmpty ) {
                       return const SliverToBoxAdapter(

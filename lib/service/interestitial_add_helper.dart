@@ -13,7 +13,7 @@ class InterstitialAdHelper {
     Completer<void> adLoadCompleter = Completer();
     loading = true;
     InterstitialAd.load(
-      //adUnitId: 'ca-app-pub-3940256099942544/1033173712', // Replace with your Interstitial Ad Unit ID
+      // adUnitId: 'ca-app-pub-3940256099942544/1033173712', // Replace with your Interstitial Ad Unit ID
       adUnitId: 'ca-app-pub-8480119277588398/4635339846', // Replace with your Interstitial Ad Unit ID
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
@@ -45,13 +45,13 @@ class InterstitialAdHelper {
         },
         onAdDismissedFullScreenContent: (InterstitialAd ad) {
           // ad.dispose();
-          print("Interstitial Ad dismissed......................");
+          log("Interstitial Ad dismissed......................");
           // _isAdLoaded = false;
           // onAdDismissed(); // Callback after the ad is dismissed
 
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-          print('...............Failed to show interstitial ad: ${error.message}');
+          log('...............Failed to show interstitial ad: ${error.message}');
           ad.dispose();
           _isAdLoaded = false;
           onAdDismissed(); // Proceed to the next screen even if ad fails to show
@@ -66,7 +66,7 @@ class InterstitialAdHelper {
 
       //_isAdLoaded = false;
     } else {
-      print('Interstitial ad is not ready yet');
+      log('Interstitial ad is not ready yet');
       onAdDismissed(); // Proceed to the next screen if the ad is not ready
     }
   }

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:rs_wallpaper/res/colors.dart';
 import 'package:rs_wallpaper/res/component/back_button_widget.dart';
 import 'package:rs_wallpaper/res/component/image_cache.dart';
+import 'package:rs_wallpaper/res/component/loading_progress_dialog.dart';
 import 'package:rs_wallpaper/res/data/hive/favorite_item.dart';
 import 'package:rs_wallpaper/res/data/hive/hive_repository.dart';
 import 'package:rs_wallpaper/res/data/retrofit/model/all_wallpaper.dart';
@@ -77,18 +78,24 @@ class _DisplayWallpaperScreenState extends State<DisplayWallpaperScreen> {
     log("image ${widget.wallpaper.fullImage}");
     return Scaffold(
       body: PopScope(
-        canPop: false,
-        onPopInvoked: (didPop) {
-          if(didPop) return;
+        canPop: true,
+        onPopInvokedWithResult: (didPop, result ) {
+          if(didPop)return;
           final loaded = interstitialAdHelper.isAdLoaded();
-          if(interstitialAdHelper.loading  || !interstitialAdHelper.getLoadedAdd){
+          if(interstitialAdHelper.loading ){
+            Utils.showToastMessage('Advertisement loading please wait...');
             return;
           }
 
-          interstitialAdHelper.showInterstitialAd((){
-            log('................................dismis call inside  show from display');
-            Navigator.pop(context);
-          });
+          if(interstitialAdHelper.getLoadedAdd){
+            // interstitialAdHelper.showInterstitialAd((){
+            //   log('................................dismis call inside  show from display');
+            //   Navigator.pop(context);
+            // });
+            return;
+          }
+          Navigator.pop(context);
+
           log('........................................back press');
 
         },
@@ -358,7 +365,14 @@ void setWallpaper(String url, ScreenType screenType, BuildContext context) async
     Utils.showFlashBarMessage(messageText, success ? FlashType.success : FlashType.error, context);
     final helper = getIt<InterstitialAdHelper>();
     if( !helper.getLoadedAdd && !helper.loading){
-      helper.loadInterstitialAd();
+      helper.loadInterstitialAd().showWithDialog(context, message: 'getting advertise').then((value) {
+        if(helper.getLoadedAdd){
+          helper.showInterstitialAd((){
+            log('................................dismis call inside  show from display');
+            Navigator.pop(context);
+          });
+        }
+      },);
     }
 
     // Cleanup the isolate
