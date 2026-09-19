@@ -34,5 +34,5 @@ A dynamic, automated wallpaper management application built with **Flutter** and
 ## 📥 Setup & Run
 
 1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/shakibhoseen/rs-wallpaper.git]
+   ```bash git clone 
+   https://github.com/shakibhoseen/rs_wallpaper.git
